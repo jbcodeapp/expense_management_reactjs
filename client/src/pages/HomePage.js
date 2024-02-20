@@ -97,6 +97,8 @@ const HomePage = () => {
       await axios.post("/api/v1/transections/delete-transection", {
         transectionId: record._id,
       });
+      setAllTransection(allTransection.filter(item => item._id !== record._id));
+
       setLoading(false);
       message.success("Transaction Deleted!");
     } catch (error) {
@@ -119,6 +121,8 @@ const HomePage = () => {
           },
           transectionId: editable._id,
         });
+        setAllTransection(allTransection);
+
         setLoading(false);
         // console.log(values)
         message.success("Transection Updated Successfully");
@@ -127,6 +131,7 @@ const HomePage = () => {
           ...values,
           userId: user._id,
         });
+        setAllTransection(allTransection);
         setLoading(false);
         // console.log(values)
         message.success("Transection Added Successfully");
