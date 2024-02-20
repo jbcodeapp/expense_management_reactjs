@@ -1,6 +1,9 @@
 import React ,{useState,useEffect}from "react";
 import { Link,useNavigate } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 import {message} from 'antd';
+import "../../styles/header.css";
+
 const Header = () => {
   const[ loginuser , setLoginuser ]= useState('')
   const navigate = useNavigate();
@@ -17,7 +20,7 @@ const Header = () => {
   }
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg bg-light">
         <div className="container-fluid">
           <button
             className="navbar-toggler"
@@ -36,12 +39,14 @@ const Header = () => {
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-<p  className="nav-link active" > {loginuser && loginuser.name}</p>
-                  
+            {" "}
+            <h6 className="nav-link ">
+                  <UserOutlined /> {loginuser && loginuser.name}
+                </h6>{" "}                  
                   </li>
 
               <li className="nav-item">
-                <button className="btn btn-primary" 
+                <button className="btn btn-danger" 
                 onClick={logoutHandler} >
                 Logout
                 </button>

@@ -5,7 +5,7 @@
 }
 
 .content{
-  height: 80vh;
+  height: 100vh;
 }
 
 .register{
@@ -25,3 +25,26 @@
 
 }
 /* transection page */
+
+.switch-icons{
+  border: 1px solid rgba(0, 0, 0, 0.674);
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+/* antd icons */
+.anticon svg{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.active-icon{
+  color: black;
+}
+.inactive-icon{
+  color: gray;
+}
+
+.filter-tab .ant-select-selector {
+  width: 150px !important;
+}
+

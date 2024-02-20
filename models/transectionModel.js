@@ -5,33 +5,33 @@ const transectionSchema = new mongoose.Schema(
 
     userId: {
       type: String,
-      require: [true],
+      require: [false],
     },
     amount: {
       type: Number,
-      require: [true, "amount is require"],
+      require: [false, "amount is require"],
     },
     type: {
       type: String,
-      require: [true, "type is require"],
+      require: [false, "type is require"],
     },
     category: {
       type: String,
-      require: [true, "category is require"],
+      require: [false, "category is require"],
     },
     reference: {
       type: String,
     },
     description: {
       type: String,
-      require: [true, "description is require"],
+      require: [false, "description is require"],
     },
     date: {
-      type: String,
-      require: [true, "Date is require"],
+      type: Date,
+      require: [false, "Date is require"],
     },
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 const transectionModel = mongoose.model("transections", transectionSchema);
 module.exports = transectionModel;
