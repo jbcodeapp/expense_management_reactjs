@@ -22,10 +22,12 @@ const loginController = async (req, res) => {
 
 //Register callback
 const registerController = async(req,res) => {
-    try {
-        const { email, password } = req.body;
-        const newUser = await userModel(req.body);
-        await newUser.save();
+  try {
+    const newUser = await userModel.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password
+    });
         res.status(201).json({
           success: true,
           newUser,
@@ -33,8 +35,8 @@ const registerController = async(req,res) => {
       } catch (error) {
         res.status(400).json({
           success: false,
-          error,
-        });
+          error ,       
+         });
       }
 };
 
