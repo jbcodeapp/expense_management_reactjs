@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { DatePicker, Form, Input, Modal, Select, Table, message } from "antd";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Table,
+  message,
+} from "antd";
 import Layout from "../components/Layout/Layout";
 import {
   UnorderedListOutlined,
@@ -11,6 +20,7 @@ import axios from "axios";
 import Spinner from "../components/Layout/Spinner";
 import moment from "moment";
 import Analytics from "../components/Analytics";
+
 const { RangePicker } = DatePicker;
 
 const HomePage = () => {
@@ -28,7 +38,7 @@ const HomePage = () => {
     {
       title: "Date",
       dataIndex: "date",
-      render: (text) => <span>{moment(text).format("YYYY-MM-DD")}</span>,
+      render: (text) => <span>{moment(text).format("DD-MM-YYYY")}</span>,
     },
     {
       title: "Amount",
@@ -67,28 +77,29 @@ const HomePage = () => {
     },
   ];
 
+  //getAll transection
+  const getAllTransections = useCallback(async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      // console.log("User ID:", user._id);
+      setLoading(true);
+      const res = await axios.post("/api/v1/transections/get-transection", {
+        userId: user._id,
+        frequency,
+        selectedDate,
+        type,
+      });
+      setAllTransection(res.data);
+      setLoading(false);
+    } catch (error) {
+      message.error("Fetch Issue With Transection");
+    }
+  }, [frequency, selectedDate, type]);
+
   //useEffect hook
   useEffect(() => {
-    //getAll transection
-    const getAllTransections = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        // console.log("User ID:", user._id);
-        setLoading(true);
-        const res = await axios.post("/api/v1/transections/get-transection", {
-          userId: user._id,
-          frequency,
-          selectedDate,
-          type,
-        });
-        setAllTransection(res.data);
-        setLoading(false);
-      } catch (error) {
-        message.error("Fetch Issue With Transection");
-      }
-    };
     getAllTransections();
-  }, [frequency, selectedDate, type, setAllTransection]);
+  }, [getAllTransections]);
 
   //Delete handler
   const handleDelete = async (record) => {
@@ -97,52 +108,81 @@ const HomePage = () => {
       await axios.post("/api/v1/transections/delete-transection", {
         transectionId: record._id,
       });
-      setAllTransection(allTransection.filter(item => item._id !== record._id));
-
+      getAllTransections();
       setLoading(false);
       message.success("Transaction Deleted!");
     } catch (error) {
       setLoading(false);
-      console.log(error);
       message.error("unable to delete");
     }
   };
 
-  //form handling
-  const handleSubmit = async (values) => {
+  const handleAdd = async (values) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      if (editable) {
-        await axios.post("/api/v1/transections/edit-transection", {
-          payload: {
-            ...values,
-            userId: user._id,
-          },
-          transectionId: editable._id,
-        });
-        setAllTransection(allTransection);
-
-        setLoading(false);
-        // console.log(values)
-        message.success("Transection Updated Successfully");
-      } else {
-        await axios.post("/api/v1/transections/add-transection", {
-          ...values,
-          userId: user._id,
-        });
-        setAllTransection(allTransection);
-        setLoading(false);
-        // console.log(values)
-        message.success("Transection Added Successfully");
-      }
-      setShowModel(false);
-      setEditable(null);
+      await axios.post("/api/v1/transections/add-transection", {
+        ...values,
+        userId: user._id,
+      });
+      message.success("Transaction Added Successfully");
+      getAllTransections();
+      setLoading(false);
+      handleModalVisibility(false);
     } catch (error) {
       setLoading(false);
-      message.error("please fill all fields");
+      message.error("Please fill all fields");
     }
   };
+
+  // Edit handler
+  const handleEdit = async (values) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setLoading(true);
+      await axios.post("/api/v1/transections/edit-transection", {
+        payload: {
+          ...values,
+          userId: user._id,
+        },
+        transectionId: editable._id,
+      });
+      message.success("Transaction Updated Successfully");
+      getAllTransections(); // Update state with the updated transaction
+      setLoading(false);
+      handleModalVisibility(false);
+    } catch (error) {
+      setLoading(false);
+      message.error("Please fill all fields");
+    }
+  };
+
+  // Function to reset editable state
+  const resetEditableState = () => {
+    setEditable(null);
+  };
+
+  // Function to handle modal visibility
+  const handleModalVisibility = (visible) => {
+    if (!visible) {
+      resetEditableState();
+    }
+    setShowModel(visible);
+  };
+  
+  //form handling
+  const handleSubmit = async (values) => {
+    if (editable) {
+      handleEdit(values);
+    } else {
+      handleAdd(values);
+    }
+  };
+
+  // Form initial values
+  const formInitialValues = editable
+    ? { ...editable, date: moment(editable.date) }
+    : {};
   return (
     <Layout>
       {loading && <Spinner />}
@@ -193,7 +233,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <div className="content">
+      <div className="content my-2">
         {viewData === "table" ? (
           <Table
             columns={columns}
@@ -209,13 +249,14 @@ const HomePage = () => {
       <Modal
         title={editable ? "Edit Transection" : "Add Transection"}
         open={showModel}
-        onCancel={() => setShowModel(false)}
-        footer={false}
+        onCancel={() => handleModalVisibility(false)}
+        footer={null}
+        destroyOnClose
       >
         <Form
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={editable}
+          initialValues={formInitialValues}
         >
           <Form.Item label="Amount" name="amount">
             <Input type="text" required />
@@ -240,7 +281,7 @@ const HomePage = () => {
             </Select>
           </Form.Item>
           <Form.Item label="Date" name="date">
-            <Input type="date" />
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item label="Reference" name="reference">
             <Input type="text" required />
@@ -249,10 +290,10 @@ const HomePage = () => {
             <Input type="text" required />
           </Form.Item>
           <div className="d-flex justify-content-end">
-            <button type="submit" className="btn btn-primary">
-              {" "}
-              SAVE
-            </button>
+            <Button htmlType="submit" type="primary">
+              {editable ? "Update" : "Save"}{" "}
+              {/* Change button text based on edit or add */}
+            </Button>
           </div>
         </Form>
       </Modal>

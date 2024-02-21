@@ -38,14 +38,20 @@ const deleteTransection = async(req,res) => {
 }
 const editTransection = async (req, res) => {
   try {
-    await transectionModel.findOneAndUpdate(
-      { _id: req.body.transectionId },
-      req.body.payload
+    const { transectionId, payload } = req.body;
+    const updatedTransection = await transectionModel.findOneAndUpdate(
+      { _id: transectionId },
+      payload,
+      { new: true } 
     );
-    res.status(200).send("Edit successfully");
+    if (!updatedTransection) {
+      return res.status(404).send("Transaction not found");
+    }
+
+    res.status(200).json(updatedTransection);
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

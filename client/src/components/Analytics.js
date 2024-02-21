@@ -108,7 +108,7 @@ const Analytics = ({ allTransection }) => {
               .reduce((acc, transection) => acc + transection.amount, 0);
             return (
               amount > 0 && (
-                <div className="card mt-2">
+                <div className="card mt-2" key={category}>
                   <div className="card-body">
                     <h6>{category}</h6>
                     <Progress
@@ -134,7 +134,7 @@ const Analytics = ({ allTransection }) => {
               .reduce((acc, transection) => acc + transection.amount, 0);
             return (
               amount > 0 && (
-                <div className="card mt-2">
+                <div className="card mt-2" key={category}>
                   <div className="card-body">
                     <h6>{category}</h6>
                     <Progress
