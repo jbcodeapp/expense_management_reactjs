@@ -23,6 +23,7 @@ const getAllTransection = async (req, res) => {
     res.status(200).json(transections);
   } catch (error) {
     console.log(error);
+    
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -57,11 +58,14 @@ const editTransection = async (req, res) => {
 
 const addTransection = async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const { userId, amount, type, category, date, reference, description } = req.body;
 
     // Data integrity check: Ensure that the user ID is a non-empty string
     if (!userId || typeof userId !== "string" || userId.trim() === "") {
-      return res.status(400).json({ error: "Invalid user ID" });
+      return res.status(400).json({ error: "Invalid userId" });
+    }
+    else if (!amount || !type || !category || !date || !reference || !description) {
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const newTransection = new transectionModel(req.body);

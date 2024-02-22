@@ -5,7 +5,7 @@ const transectionSchema = new mongoose.Schema(
 
     userId: {
       type: String,
-      require: [true],
+      require: [true, "userid is require"],
     },
     amount: {
       type: Number,

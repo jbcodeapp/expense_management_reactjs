@@ -22,6 +22,8 @@ app.use(cors())
 app.use('/api/v1/users', require('./routes/userRoute'))
 //transection routes
 app.use('/api/v1/transections', require('./routes/transectionRoutes'))
+//category routes
+app.use('/api/v1/category', require('./routes/category'))
 
 //port
 const PORT = 8080 || process.env.PORT

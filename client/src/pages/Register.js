@@ -35,13 +35,28 @@ const [loading, setLoading] = useState(false);
       {loading && <Spinner />}
         <Form  className="register-form" layout='vertical' onFinish={submitHandler}>
             <h1>Register Form</h1>
-           <Form.Item label="Name" name="name">
+           <Form.Item label="Name" name="name" rules={[
+              {
+                required: true,
+                message: " Name required!",
+              },
+            ]}>
             <Input type="text" required/>
            </Form.Item>
-           <Form.Item label="Email" name="email">
+           <Form.Item label="Email" name="email" rules={[
+              {
+                required: true,
+                message: " Email required!",
+              },
+            ]}>
             <Input type='email' required/>
            </Form.Item>
-           <Form.Item label="Password" name="password">
+           <Form.Item label="Password" name="password" rules={[
+              {
+                required: true,
+                message: " Password required!",
+              },
+            ]}>
             <Input type='password' required/>
            </Form.Item>
 

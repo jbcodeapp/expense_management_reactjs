@@ -32,6 +32,7 @@ const HomePage = () => {
   const [type, setType] = useState("all");
   const [viewData, setViewData] = useState("table");
   const [editable, setEditable] = useState(null);
+  const [categories, setCategories] = useState([]); 
 
   //table data
   const columns = [
@@ -96,10 +97,21 @@ const HomePage = () => {
     }
   }, [frequency, selectedDate, type]);
 
+  // Fetch categories from backend
+  const fetchCategories = useCallback(async () => {
+    try {
+      const res = await axios.post("/api/v1/category/get-category"); 
+      setCategories(res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, []);
+
   //useEffect hook
   useEffect(() => {
     getAllTransections();
-  }, [getAllTransections]);
+    fetchCategories();
+  }, [getAllTransections,fetchCategories]);
 
   //Delete handler
   const handleDelete = async (record) => {
@@ -183,6 +195,7 @@ const HomePage = () => {
   const formInitialValues = editable
     ? { ...editable, date: moment(editable.date) }
     : {};
+
   return (
     <Layout>
       {loading && <Spinner />}
@@ -254,40 +267,77 @@ const HomePage = () => {
         destroyOnClose
       >
         <Form
+         variant="filled"
+         style={{
+           maxWidth: 600,
+         }}
           layout="vertical"
           onFinish={handleSubmit}
           initialValues={formInitialValues}
         >
-          <Form.Item label="Amount" name="amount">
-            <Input type="text" required />
+          <Form.Item 
+          label="Amount" 
+          name="amount"
+          rules={[
+            {
+              required: true,
+              message: " Amount required!",
+            },
+          ]}>
+            <Input type="text"  />
           </Form.Item>
-          <Form.Item label="Type" name="type">
+          <Form.Item 
+          label="Type" 
+          name="type"
+          rules={[
+            {
+              required: true,
+              message: " Type required!",
+            },
+          ]}
+          >
             <Select>
+              <Select.Option value="expense" >Expense</Select.Option>
               <Select.Option value="income">Income</Select.Option>
-              <Select.Option value="expense">Expense</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Category" name="category">
-            <Select>
-              <Select.Option value="salary">Salary</Select.Option>
-              <Select.Option value="tip">Tip</Select.Option>
-              <Select.Option value="project">Project</Select.Option>
-              <Select.Option value="food">Food</Select.Option>
-              <Select.Option value="movie">Movie</Select.Option>
-              <Select.Option value="bills">Bills</Select.Option>
-              <Select.Option value="medical">Medical</Select.Option>
-              <Select.Option value="fees">Fees</Select.Option>
-              <Select.Option value="tax">TAX</Select.Option>
-            </Select>
+          <Form.Item label="Category" name="category" rules={[
+              {
+                required: true,
+                message: " Category required!",
+              },
+            ]}>
+            <Select >
+          {categories.map(category => (
+            <Select.Option key={category._id} value={category.name}>
+              {category.name}
+            </Select.Option>
+          ))}
+        </Select>
           </Form.Item>
-          <Form.Item label="Date" name="date">
+          <Form.Item label="Date" name="date" rules={[
+              {
+                required: true,
+                message: " Date required!",
+              },
+            ]} >
             <DatePicker style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item label="Reference" name="reference">
-            <Input type="text" required />
+          <Form.Item label="Reference" name="reference" rules={[
+              {
+                required: true,
+                message: " Reference required!",
+              },
+            ]}>
+            <Input type="text"  />
           </Form.Item>
-          <Form.Item label="Description" name="description">
-            <Input type="text" required />
+          <Form.Item label="Description" name="description" rules={[
+              {
+                required: true,
+                message: " Description required!",
+              },
+            ]}>
+            <Input type="text"  />
           </Form.Item>
           <div className="d-flex justify-content-end">
             <Button htmlType="submit" type="primary">
