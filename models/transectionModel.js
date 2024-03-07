@@ -21,10 +21,10 @@ const transectionSchema = new mongoose.Schema(
     },
     reference: {
       type: String,
+      require: [true, "reference is require"],
     },
     description: {
       type: String,
-      require: [true, "description is require"],
     },
     date: {
       type: Date,

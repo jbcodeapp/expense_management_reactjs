@@ -11,7 +11,6 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(false);
   const [editable, setEditable] = useState(null);
   const [categories, setCategories] = useState([]);
-
   //table data
   const columns = [
     {
@@ -57,6 +56,7 @@ const CategoryPage = () => {
 
   //useEffect hook
   useEffect(() => {
+    
     fetchCategories();
   }, [fetchCategories]);
 
@@ -77,6 +77,7 @@ const CategoryPage = () => {
   };
 
   const handleAdd = async (values) => {
+    
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
@@ -84,17 +85,23 @@ const CategoryPage = () => {
         ...values,
         userId: user._id,
       });
+      console.log("Response data:", res.data);
       if (res.status === 201) {
         message.success("Category Added Successfully");
         fetchCategories();
         handleModalVisibility(false);
-      } else if (res.status === 404) {
-        message.error("Category Already Exists");
       }
+      // else if (res.status === 403) {
+      //   message.error("Category Already Exist");
+      // }
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      message.error("Please fill all fields");
+      if (error.response && error.response.status === 403) {
+        message.error("Category Already Exists");
+    } else {
+        message.error("An error occurred while adding the category");
+    }
     }
   };
 
@@ -116,7 +123,7 @@ const CategoryPage = () => {
       handleModalVisibility(false);
     } catch (error) {
       setLoading(false);
-      message.error("Please fill all fields");
+      message.error("An error occurred while updating the category");
     }
   };
 

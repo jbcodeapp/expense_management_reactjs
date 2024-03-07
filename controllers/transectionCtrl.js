@@ -64,7 +64,7 @@ const addTransection = async (req, res) => {
     if (!userId || typeof userId !== "string" || userId.trim() === "") {
       return res.status(400).json({ error: "Invalid userId" });
     }
-    else if (!amount || !type || !category || !date || !reference || !description) {
+    else if (!amount || !type || !category || !date || !reference ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 

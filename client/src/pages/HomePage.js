@@ -133,10 +133,12 @@ const HomePage = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      await axios.post("/api/v1/transections/add-transection", {
+      const dataToSend = {
+        ...formInitialValues, // Assuming formInitialValues contains default values
         ...values,
         userId: user._id,
-      });
+      };
+      await axios.post("/api/v1/transections/add-transection", dataToSend);
       message.success("Transaction Added Successfully");
       getAllTransections();
       setLoading(false);
@@ -194,7 +196,11 @@ const HomePage = () => {
   // Form initial values
   const formInitialValues = editable
     ? { ...editable, date: moment(editable.date) }
-    : {};
+    : {
+      category: categories.length > 0 ? categories[0].name : undefined,
+      type: "expense", // Assuming "expense" is the default type
+      date: moment(), // Assuming today's date is the default date
+    };
 
   return (
     <Layout>
@@ -267,10 +273,10 @@ const HomePage = () => {
         destroyOnClose
       >
         <Form
-         variant="filled"
-         style={{
-           maxWidth: 600,
-         }}
+        //  variant="filled"
+        //  style={{
+        //    maxWidth: 600,
+        //  }}
           layout="vertical"
           onFinish={handleSubmit}
           initialValues={formInitialValues}
@@ -278,36 +284,45 @@ const HomePage = () => {
           <Form.Item 
           label="Amount" 
           name="amount"
+          
           rules={[
             {
               required: true,
-              message: " Amount required!",
+              message: "Please enter a valid number for amount!",
             },
           ]}>
-            <Input type="text"  />
+            <Input type="Number" autofocus />
           </Form.Item>
           <Form.Item 
           label="Type" 
           name="type"
           rules={[
-            {
-              required: true,
-              message: " Type required!",
-            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (getFieldValue('type') !== '') {
+                  return Promise.resolve();
+                }
+                return Promise.reject('Type required!');
+              },
+            }),
           ]}
           >
-            <Select>
+            <Select defaultValue={"expense"}>
               <Select.Option value="expense" >Expense</Select.Option>
               <Select.Option value="income">Income</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item label="Category" name="category" rules={[
-              {
-                required: true,
-                message: " Category required!",
-              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (getFieldValue('category') !== '') {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Category required!');
+                },
+              }),
             ]}>
-            <Select >
+            <Select defaultValue={categories.length > 0 ? categories[0].name : undefined}>
           {categories.map(category => (
             <Select.Option key={category._id} value={category.name}>
               {category.name}
@@ -316,12 +331,16 @@ const HomePage = () => {
         </Select>
           </Form.Item>
           <Form.Item label="Date" name="date" rules={[
-              {
-                required: true,
-                message: " Date required!",
-              },
+             ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (getFieldValue('date') !== '') {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Date required!');
+                },
+              }), 
             ]} >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker defaultValue={moment()} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item label="Reference" name="reference" rules={[
               {
@@ -331,12 +350,7 @@ const HomePage = () => {
             ]}>
             <Input type="text"  />
           </Form.Item>
-          <Form.Item label="Description" name="description" rules={[
-              {
-                required: true,
-                message: " Description required!",
-              },
-            ]}>
+          <Form.Item label="Description" name="description" >
             <Input type="text"  />
           </Form.Item>
           <div className="d-flex justify-content-end">
