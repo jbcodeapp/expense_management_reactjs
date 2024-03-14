@@ -3,11 +3,12 @@ import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import CategoryPage from "./pages/CategoriesPage";
+import Expense from "./pages/Expense";
+import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <>
       <Routes>
-
         <Route
           path="/"
           element={
@@ -24,9 +25,17 @@ function App() {
             </ProtectedRoutes>
           }
         />
+        <Route
+          path="/UserProfile"
+          element={
+            <ProtectedRoutes>
+              <UserProfile />
+            </ProtectedRoutes>
+          }
+        />
+        <Route path="/expense" element={<Expense />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        
       </Routes>
     </>
   );

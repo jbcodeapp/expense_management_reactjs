@@ -7,12 +7,14 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
+    "build": "react-scripts build",
     "dev": "concurrently \"npm run server\" \"npm run client\" "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ant-design/charts": "^2.0.3",
     "colors": "^1.4.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",

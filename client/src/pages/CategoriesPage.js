@@ -81,11 +81,11 @@ const CategoryPage = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      const res = await axios.post("/api/v1/category/add-category", {
+      const res = await axios.post("http://localhost:8080/api/v1/category/add-category", {
         ...values,
         userId: user._id,
       });
-      console.log("Response data:", res.data);
+      // console.log("Response data:", res.data);
       if (res.status === 201) {
         message.success("Category Added Successfully");
         fetchCategories();
@@ -162,8 +162,8 @@ const CategoryPage = () => {
           Add Category
         </button>
       </div>
-      <div className="content my-2">
-        <Table columns={columns} dataSource={categories} />
+      <div className="content">
+        <Table columns={columns} dataSource={categories.map((category, index) => ({ ...category, key: index}))} />
       </div>
       <Modal
         title={editable ? "Edit Category" : "Add Category"}

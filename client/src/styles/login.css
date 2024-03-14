@@ -3,21 +3,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #fff;
 
   }
+  .img-container {
+    display: none;
+}
+
   .login-form {
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 20px;
     width: 30%;
     border-radius: 20px; /* Add border radius */
+    /* margin-right: 0%; */
 
   }
-  
-  .login-form h2 {
+  .fa {
+    color: #b87333;
+  }
+  .login-form h4 {
     margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
+    text-align: left;
+    /* font-weight: bold; */
     color: #b87333;
   }
   
@@ -38,7 +46,4 @@
     border: 1px solid #b87333 !important;
     color: #b87333;
   }
-  .login-form button:hover {
-    background-color: black;
-    color: white;
-  }
+  

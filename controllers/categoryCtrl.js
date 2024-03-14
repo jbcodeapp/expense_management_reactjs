@@ -40,8 +40,13 @@ const editCategory = async (req, res) => {
 const addCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const category = await categoryModel.findOne({ name });
-    // console.log("api check" + category);
+    const categoryNameLowerCase = name.toLowerCase(); 
+
+    // Search for existing category case insensitively
+    const category = await categoryModel.findOne({ name: { $regex: new RegExp('^' + categoryNameLowerCase + '$', 'i') } });
+
+    // const { name } = req.body;
+    // const category = await categoryModel.findOne({ name });
     if (category) {
       return res.status(403).send("Category Already Exist");
     }

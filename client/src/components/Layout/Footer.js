@@ -1,10 +1,21 @@
-import React from 'react'
+import React from "react";
 
 const Footer = () => {
   return (
-    <div className='bg-dark text-light p-3'>
-      <h6 className='text-center text-white'>All rights reserved &copy; Jbcodeapp</h6>
-    </div>
-  )
-}
-export default Footer
+    <footer
+      style={{ backgroundColor: "white" }}
+    >
+      <div
+        className="text-center text-black p-3"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.01)" }}
+      >
+        © Copyright{" "}
+        <a className="text-black" href="/expense">
+        <strong><span>EXpense</span></strong>
+        </a>
+        {" "} All Rights Reserved
+      </div>
+    </footer>
+  );
+};
+export default Footer;

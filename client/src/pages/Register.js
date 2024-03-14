@@ -12,7 +12,7 @@ const [loading, setLoading] = useState(false);
     const submitHandler = async(values) => {
       try{
         setLoading(true)
-        await axios.post('/api/v1/users/register', values)
+        await axios.post('http://localhost:8080/api/v1/users/register', values)
         message.success('Registration Successful')
         setLoading(false)
         navigate('/login')
