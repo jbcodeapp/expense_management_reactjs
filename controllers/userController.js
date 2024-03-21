@@ -66,7 +66,10 @@ const registerController = async(req,res) => {
     const newUser = await userModel.create({
       name: req.body.name,
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      phone: req.body.phone,
+      country: req.body.country,
+      address: req.body.address,
     });
     if (!newUser) {
       throw new Error("Failed to create user.");

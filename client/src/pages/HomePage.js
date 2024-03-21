@@ -32,7 +32,7 @@ const HomePage = () => {
   const [type, setType] = useState("all");
   const [viewData, setViewData] = useState("table");
   const [editable, setEditable] = useState(null);
-  const [categories, setCategories] = useState([]); 
+  const [categories, setCategories] = useState([]);
 
   //table data
   const columns = [
@@ -84,12 +84,15 @@ const HomePage = () => {
       const user = JSON.parse(localStorage.getItem("user"));
       // console.log("User ID:", user._id);
       setLoading(true);
-      const res = await axios.post("http://localhost:8080/api/v1/transections/get-transection", {
-        userId: user._id,
-        frequency,
-        selectedDate,
-        type,
-      });
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/transections/get-transection",
+        {
+          userId: user._id,
+          frequency,
+          selectedDate,
+          type,
+        }
+      );
       setAllTransection(res.data);
       setLoading(false);
     } catch (error) {
@@ -100,7 +103,7 @@ const HomePage = () => {
   // Fetch categories from backend
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await axios.post("/api/v1/category/get-category"); 
+      const res = await axios.post("/api/v1/category/get-category");
       setCategories(res.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -111,7 +114,7 @@ const HomePage = () => {
   useEffect(() => {
     getAllTransections();
     fetchCategories();
-  }, [getAllTransections,fetchCategories]);
+  }, [getAllTransections, fetchCategories]);
 
   //Delete handler
   const handleDelete = async (record) => {
@@ -183,7 +186,7 @@ const HomePage = () => {
     }
     setShowModel(visible);
   };
-  
+
   //form handling
   const handleSubmit = async (values) => {
     if (editable) {
@@ -197,10 +200,10 @@ const HomePage = () => {
   const formInitialValues = editable
     ? { ...editable, date: moment(editable.date) }
     : {
-      category: categories.length > 0 ? categories[0].name : undefined,
-      type: "expense", // Assuming "expense" is the default type
-      date: moment(), // Assuming today's date is the default date
-    };
+        category: categories.length > 0 ? categories[0].name : undefined,
+        type: "expense", // Assuming "expense" is the default type
+        date: moment(), // Assuming today's date is the default date
+      };
 
   return (
     <Layout>
@@ -273,85 +276,101 @@ const HomePage = () => {
         destroyOnClose
       >
         <Form
-        //  variant="filled"
-        //  style={{
-        //    maxWidth: 600,
-        //  }}
+          //  variant="filled"
+          //  style={{
+          //    maxWidth: 600,
+          //  }}
           layout="vertical"
           onFinish={handleSubmit}
           initialValues={formInitialValues}
         >
-          <Form.Item 
-          label="Amount" 
-          name="amount"
-          
-          rules={[
-            {
-              required: true,
-              message: "Please enter a valid number for amount!",
-            },
-          ]}>
+          <Form.Item
+            label="Amount"
+            name="amount"
+            rules={[
+              {
+                required: true,
+                message: "Please enter a valid number for amount!",
+              },
+            ]}
+          >
             <Input type="Number" autofocus />
           </Form.Item>
-          <Form.Item 
-          label="Type" 
-          name="type"
-          rules={[
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (getFieldValue('type') !== '') {
-                  return Promise.resolve();
-                }
-                return Promise.reject('Type required!');
-              },
-            }),
-          ]}
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (getFieldValue("type") !== "") {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject("Type required!");
+                },
+              }),
+            ]}
           >
             <Select defaultValue={"expense"}>
-              <Select.Option value="expense" >Expense</Select.Option>
+              <Select.Option value="expense">Expense</Select.Option>
               <Select.Option value="income">Income</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Category" name="category" rules={[
+          <Form.Item
+            label="Category"
+            name="category"
+            rules={[
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (getFieldValue('category') !== '') {
+                  if (getFieldValue("category") !== "") {
                     return Promise.resolve();
                   }
-                  return Promise.reject('Category required!');
+                  return Promise.reject("Category required!");
                 },
               }),
-            ]}>
-            <Select defaultValue={categories.length > 0 ? categories[0].name : undefined}>
-          {categories.map(category => (
-            <Select.Option key={category._id} value={category.name}>
-              {category.name}
-            </Select.Option>
-          ))}
-        </Select>
+            ]}
+          >
+            <Select
+              defaultValue={
+                categories.length > 0 ? categories[0].name : undefined
+              }
+            >
+              {categories.map((category) => (
+                <Select.Option key={category._id} value={category.name}>
+                  {category.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item label="Date" name="date" rules={[
-             ({ getFieldValue }) => ({
+          <Form.Item
+            label="Date"
+            name="date"
+            rules={[
+              ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (getFieldValue('date') !== '') {
+                  if (getFieldValue("date") !== "") {
                     return Promise.resolve();
                   }
-                  return Promise.reject('Date required!');
+                  return Promise.reject("Date required!");
                 },
-              }), 
-            ]} >
+              }),
+            ]}
+          >
             <DatePicker defaultValue={moment()} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item label="Reference" name="reference" rules={[
+          <Form.Item
+            label="Reference"
+            name="reference"
+            rules={[
               {
                 required: true,
                 message: " Reference required!",
               },
-            ]}>
-            <Input type="text"  />
+            ]}
+          >
+            <Input type="text" />
           </Form.Item>
-          <Form.Item label="Description" name="description" >
-            <Input type="text"  />
+          <Form.Item label="Description" name="description">
+            <Input type="text" />
           </Form.Item>
           <div className="d-flex justify-content-end">
             <Button htmlType="submit" type="primary">

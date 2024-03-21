@@ -79,7 +79,7 @@ const UserProfile = () => {
                 </label>
                 <h2> {loginuser && loginuser.name}</h2>
 
-                <div className="social-links mt-2">
+                {/* <div className="social-links mt-2">
                   <a href="#" className="twitter">
                     <i className="bi bi-twitter" />
                   </a>
@@ -92,7 +92,7 @@ const UserProfile = () => {
                   <a href="#" className="linkedin">
                     <i className="bi bi-linkedin" />
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@ const UserProfile = () => {
               <div className="card-body pt-3">
                 {/* Bordered Tabs */}
                 <ul className="nav nav-tabs nav-tabs-bordered">
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <button
                       className="nav-link active"
                       data-bs-toggle="tab"
@@ -109,7 +109,7 @@ const UserProfile = () => {
                     >
                       Overview
                     </button>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <button
                       className="nav-link"
@@ -130,7 +130,7 @@ const UserProfile = () => {
                   </li>
                 </ul>
                 <div className="tab-content pt-4">
-                  <div
+                  {/* <div
                     className="tab-pane fade show active profile-overview"
                     id="profile-overview"
                   >
@@ -161,9 +161,9 @@ const UserProfile = () => {
                       <div className="col-lg-3 col-md-4 label">Email</div>
                       <div className="col-lg-9 col-md-8">{loginuser.email}</div>
                     </div>
-                  </div>
+                  </div> */}
                   <div
-                    className="tab-pane fade profile-edit pt-3"
+                    className="tab-pane fade show active profile-edit pt-3"
                     id="profile-edit"
                   >
                     {/* Profile Edit Form */}
